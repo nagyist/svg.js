@@ -92,26 +92,30 @@ export default class Element extends Dom {
   // return array of all ancestors of given type up to the root svg
   parents(until = this.root()) {
     const isSelector = typeof until === 'string'
+    const root = this.root()
+    const rootNode = root && root.node
+
     if (!isSelector) {
-      until = makeInstance(until)
+      until = until && makeInstance(until).node
     }
+
     const parents = new List()
     let parent = this
 
     while (
       (parent = parent.parent()) &&
       parent.node !== globals.document &&
-      parent.nodeName !== '#document-fragment'
+      parent.node.nodeName !== '#document-fragment'
     ) {
       parents.push(parent)
 
-      if (!isSelector && parent.node === until.node) {
+      if (!isSelector && parent.node === until) {
         break
       }
       if (isSelector && parent.matches(until)) {
         break
       }
-      if (parent.node === this.root().node) {
+      if (rootNode && parent.node === rootNode) {
         // We worked our way to the root and didn't match `until`
         return null
       }

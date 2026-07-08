@@ -1,6 +1,14 @@
 /* globals describe, expect, it, beforeEach, spyOn, jasmine, container */
 
-import { Element, create, Rect, G, SVG, Text } from '../../../src/main.js'
+import {
+  Element,
+  create,
+  Rect,
+  G,
+  SVG,
+  Text,
+  Fragment
+} from '../../../src/main.js'
 const { any, objectContaining } = jasmine
 
 describe('Element.js', function () {
@@ -206,6 +214,17 @@ describe('Element.js', function () {
       expect(rect.parents('.does-not-exist')).toEqual(null)
       expect(rect.parents('.test')).toEqual(null)
       expect(rect.parents(groupA)).toEqual(null)
+    })
+
+    it('does not throw for an element whose parent is a document fragment', () => {
+      const fragment = new Fragment()
+      const rect = fragment.rect(100, 100)
+      let parents
+
+      expect(() => {
+        parents = rect.parents()
+      }).not.toThrow()
+      expect(parents).toEqual([])
     })
   })
 
