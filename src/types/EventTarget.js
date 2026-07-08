@@ -14,10 +14,15 @@ export default class EventTarget extends Base {
     if (!bag) return true
 
     const events = bag[event.type]
+    if (!events) return true
 
     for (const i in events) {
       for (const j in events[i]) {
-        events[i][j](event)
+        const listeners = events[i][j]
+
+        listeners.forEach(function (listener) {
+          listener(event)
+        })
       }
     }
 

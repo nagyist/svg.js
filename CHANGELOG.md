@@ -6,6 +6,12 @@ The document follows the conventions described in [“Keep a CHANGELOG”](http:
 
 ====
 
+## [Unreleased]
+
+### Fixed
+
+- remove every matching listener when the same callback is registered multiple times
+
 ## [3.2.5]
 
 ### Fixed

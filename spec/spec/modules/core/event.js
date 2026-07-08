@@ -194,6 +194,22 @@ describe('event.js', () => {
       expect(spy2).toHaveBeenCalledTimes(1)
       expect(spy3).toHaveBeenCalledTimes(1)
     })
+
+    it('unbinds duplicate DOM registrations for the same listener', () => {
+      const rect = SVG().rect(10, 10)
+      const spy = createSpy('spy')
+
+      rect.on('event', spy)
+      rect.on('event', spy)
+      rect.node.dispatchEvent(new (getWindow().CustomEvent)('event'))
+
+      expect(spy).toHaveBeenCalledTimes(2)
+
+      rect.off('event', spy)
+      rect.node.dispatchEvent(new (getWindow().CustomEvent)('event'))
+
+      expect(spy).toHaveBeenCalledTimes(2)
+    })
   })
 
   describe('dispatch()', () => {

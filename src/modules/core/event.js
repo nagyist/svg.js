@@ -48,7 +48,9 @@ export function on(node, events, listener, binding, options) {
     bag[ev][ns] = bag[ev][ns] || {}
 
     // reference listener
-    bag[ev][ns][listener._svgjsListenerId] = l
+    const id = listener._svgjsListenerId
+    bag[ev][ns][id] = bag[ev][ns][id] || []
+    bag[ev][ns][id].push(l)
 
     // add listener
     n.addEventListener(ev, l, options || false)
@@ -78,12 +80,14 @@ export function off(node, events, listener, options) {
     if (listener) {
       // remove listener reference
       if (bag[ev] && bag[ev][ns || '*']) {
+        const listeners = bag[ev][ns || '*'][listener]
+
+        if (!listeners) return
+
         // removeListener
-        n.removeEventListener(
-          ev,
-          bag[ev][ns || '*'][listener],
-          options || false
-        )
+        listeners.forEach(function (l) {
+          n.removeEventListener(ev, l, options || false)
+        })
 
         delete bag[ev][ns || '*'][listener]
       }
