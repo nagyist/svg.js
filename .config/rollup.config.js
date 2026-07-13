@@ -22,22 +22,24 @@ const headerShort = `/*! ${pkg.name} v${pkg.version} ${pkg.license}*/;`
 
 const getBabelConfig = (node = false) => {
   let targets = pkg.browserslist
-  const plugins = [
-    [
-      '@babel/transform-runtime',
-      {
-        version: '^7.24.7',
-        regenerator: false,
-        useESModules: true
-      }
-    ],
-    [
-      'polyfill-corejs3',
-      {
-        method: 'usage-pure'
-      }
-    ]
-  ]
+  const plugins = node
+    ? []
+    : [
+        [
+          '@babel/transform-runtime',
+          {
+            version: '^7.24.7',
+            regenerator: false,
+            useESModules: true
+          }
+        ],
+        [
+          'polyfill-corejs3',
+          {
+            method: 'usage-pure'
+          }
+        ]
+      ]
 
   if (node) {
     targets = 'maintained node versions'
@@ -45,7 +47,7 @@ const getBabelConfig = (node = false) => {
 
   return babel({
     include: 'src/**',
-    babelHelpers: 'runtime',
+    babelHelpers: node ? 'bundled' : 'runtime',
     babelrc: false,
     targets: targets,
     presets: [

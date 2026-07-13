@@ -10,6 +10,7 @@ The document follows the conventions described in [“Keep a CHANGELOG”](http:
 
 ### Fixed
 
+- point published browser, ESM, and CommonJS entry points at the built distributions
 - isolate cached parser elements when switching between documents
 - handle document fragments correctly in `parents()`
 - restore the previous window context when a `withWindow()` callback throws

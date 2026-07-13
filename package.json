@@ -16,24 +16,20 @@
   "unpkg": "dist/svg.min.js",
   "jsdelivr": "dist/svg.min.js",
   "browser": "dist/svg.esm.js",
-  "module": "src/main.js",
+  "module": "dist/svg.esm.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./svg.js.d.ts",
-        "default": "./src/main.js"
-      },
-      "require": {
-        "types": "./svg.js.d.ts",
-        "default": "./dist/svg.node.cjs"
-      }
+      "types": "./svg.js.d.ts",
+      "browser": "./dist/svg.esm.js",
+      "import": "./dist/svg.esm.js",
+      "require": "./dist/svg.node.cjs",
+      "default": "./dist/svg.esm.js"
     }
   },
   "files": [
-    "/dist",
-    "/src",
-    "/svg.js.d.ts",
-    "/.config"
+    "dist",
+    "svg.js.d.ts",
+    "CHANGELOG.md"
   ],
   "maintainers": [
     {
@@ -86,8 +82,9 @@
     "test": "npx karma start .config/karma.conf.cjs || true",
     "test:ci": "karma start .config/karma.conf.saucelabs.cjs",
     "test:svgdom": "node ./spec/runSVGDomTest.js || true",
+    "test:package": "node ./spec/package/commonjs-entry.cjs",
     "zip": "zip -j dist/svg.js.zip -- LICENSE.txt README.md CHANGELOG.md dist/svg.js dist/svg.js.map dist/svg.min.js dist/svg.min.js.map dist/polyfills.js dist/polyfillsIE.js",
-    "prepublishOnly": "rm -rf ./dist && npm run build && npm run build:polyfills && npm test",
+    "prepublishOnly": "rm -rf ./dist && npm run build && npm run build:polyfills && npm run test:package && npm test",
     "postpublish": "npm run zip",
     "checkTests": "node spec/checkForAllTests.js"
   },
