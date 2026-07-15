@@ -97,12 +97,8 @@ module.exports = function (config) {
     // Saucelabs allow up to 5 concurrent sessions on the free open source tier.
     concurrency: 5,
 
-    // this specifies which plugins karma should load
-    // by default all karma plugins, starting with `karma-` will load
-    // so if you are really puzzled why something isn't working, then comment
-    // out plugins: [] - it's here to make karma load faster
-    // get possible karma plugins by `ls node_modules | grep 'karma-*'`
-    plugins: ['karma-jasmine', 'karma-sauce-launcher'],
+    // Resolve plugins from the project root under pnpm's dependency layout.
+    plugins: [require('karma-jasmine'), require('karma-sauce-launcher')],
 
     // logLevel: config.LOG_DEBUG,
 

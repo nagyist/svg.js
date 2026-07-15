@@ -6,10 +6,12 @@ services:
 addons:
   firefox: latest
   chrome: stable
+before_install:
+  - corepack enable pnpm
 install:
-  - npm install
-  - npm run build
+  - pnpm install --frozen-lockfile
+  - pnpm build
 script:
-  - npm run test:svgdom
-  - npm test
-  - cat coverage/firefox/lcov.info | node_modules/.bin/coveralls
+  - pnpm test:svgdom
+  - pnpm test
+  - pnpm exec coveralls < coverage/firefox/lcov.info

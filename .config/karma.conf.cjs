@@ -19,6 +19,15 @@ if (process.platform === 'linux') {
 module.exports = function (config) {
   config.set(
     Object.assign(karmaCommon(config), {
+      // Load plugins from the project root so pnpm's strict dependency layout
+      // does not rely on Karma's flat-node_modules auto-discovery.
+      plugins: [
+        require('karma-jasmine'),
+        require('karma-coverage'),
+        require('karma-chrome-launcher'),
+        require('karma-firefox-launcher')
+      ],
+
       files: [
         'spec/RAFPlugin.js',
         {

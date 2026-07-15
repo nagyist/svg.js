@@ -10,7 +10,7 @@ fs.mkdirSync(consumer)
 
 try {
   execFileSync(
-    process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
     ['run', 'rollup'],
     { cwd: repo, stdio: 'inherit' }
   )

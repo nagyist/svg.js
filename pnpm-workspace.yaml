@@ -1,0 +1,7 @@
+allowBuilds:
+  core-js: false
+  puppeteer: false
+
+# This is our own freshly published release required by the reference resolver.
+minimumReleaseAgeExclude:
+  - svgdom@0.1.24
