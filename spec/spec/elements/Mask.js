@@ -24,6 +24,20 @@ describe('Mask.js', () => {
       expect(rect.masker()).toBe(null)
     })
 
+    it('leaves targets of an overlapping mask ID untouched', () => {
+      const canvas = SVG().addTo(container)
+      const mask = canvas.mask().id('a')
+      const otherMask = canvas.mask().id('aa')
+      const rect = canvas.rect(100, 100).maskWith(mask)
+      const otherRect = canvas.rect(100, 100).maskWith(otherMask)
+
+      expect(mask.targets()).toEqual([rect])
+      mask.remove()
+
+      expect(rect.masker()).toBe(null)
+      expect(otherRect.masker()).toBe(otherMask)
+    })
+
     it('calls remove on parent class', () => {
       const mask = new Mask()
       const spy = spyOn(Container.prototype, 'remove')

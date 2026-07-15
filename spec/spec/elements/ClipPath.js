@@ -24,6 +24,20 @@ describe('ClipPath.js', () => {
       expect(rect.clipper()).toBe(null)
     })
 
+    it('leaves targets of an overlapping clipPath ID untouched', () => {
+      const canvas = SVG().addTo(container)
+      const clip = canvas.clip().id('a')
+      const otherClip = canvas.clip().id('aa')
+      const rect = canvas.rect(100, 100).clipWith(clip)
+      const otherRect = canvas.rect(100, 100).clipWith(otherClip)
+
+      expect(clip.targets()).toEqual([rect])
+      clip.remove()
+
+      expect(rect.clipper()).toBe(null)
+      expect(otherRect.clipper()).toBe(otherClip)
+    })
+
     it('calls remove on parent class', () => {
       const clip = new ClipPath()
       const spy = spyOn(Container.prototype, 'remove')

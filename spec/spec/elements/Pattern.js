@@ -42,6 +42,17 @@ describe('Pattern.js', () => {
       expect(pattern.targets()).toEqual([rect])
     })
 
+    it('distinguishes overlapping IDs', () => {
+      const canvas = SVG().addTo(container)
+      const pattern = canvas.pattern().id('a')
+      const otherPattern = canvas.pattern().id('aa')
+      const rect = canvas.rect(100, 100).fill(pattern)
+      const otherRect = canvas.rect(100, 100).fill(otherPattern)
+
+      expect(pattern.targets()).toEqual([rect])
+      expect(otherPattern.targets()).toEqual([otherRect])
+    })
+
     it('matches CSS-special IDs exactly', () => {
       const canvas = SVG().addTo(container)
       const pattern = canvas.pattern().id('pattern.with:special[chars]')

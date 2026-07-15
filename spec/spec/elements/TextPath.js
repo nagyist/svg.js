@@ -148,6 +148,16 @@ describe('TextPath.js', () => {
         expect(path.targets()).toEqual([textPath])
       })
 
+      it('distinguishes overlapping path IDs', () => {
+        path.id('a')
+        const textPath = text.path(path)
+        const otherPath = canvas.path().id('aa')
+        const otherTextPath = canvas.text('other').path(otherPath)
+
+        expect(path.targets()).toEqual([textPath])
+        expect(otherPath.targets()).toEqual([otherTextPath])
+      })
+
       it('matches hrefs exactly and ignores external references', () => {
         path.id('path.with:special[chars]')
         const textPath = text.path(path)

@@ -49,6 +49,17 @@ describe('Gradient.js', () => {
       expect(gradient.targets()).toEqual([rect])
     })
 
+    it('distinguishes overlapping IDs', () => {
+      const canvas = SVG().addTo(container)
+      const gradient = canvas.gradient('linear').id('a')
+      const otherGradient = canvas.gradient('linear').id('aa')
+      const rect = canvas.rect(100, 100).fill(gradient)
+      const otherRect = canvas.rect(100, 100).fill(otherGradient)
+
+      expect(gradient.targets()).toEqual([rect])
+      expect(otherGradient.targets()).toEqual([otherRect])
+    })
+
     it('matches CSS-special IDs exactly', () => {
       const canvas = SVG().addTo(container)
       const gradient = canvas
