@@ -74,6 +74,29 @@ describe('Matrix.js', () => {
       const matrix = new Matrix().transform({ py: 10 })
       expect(matrix.f).toBe(10)
     })
+
+    it('honors every zero-valued position alias on non-identity matrices', () => {
+      const matrix = new Matrix(2, 0, 0, 3, 10, 20)
+      const cases = [
+        [{ px: 0 }, { position: { x: 0, y: NaN } }],
+        [{ py: 0 }, { position: { x: NaN, y: 0 } }],
+        [{ positionX: 0 }, { position: { x: 0, y: NaN } }],
+        [{ positionY: 0 }, { position: { x: NaN, y: 0 } }]
+      ]
+
+      for (const [input, canonical] of cases) {
+        expect(matrix.transform(input)).toEqual(matrix.transform(canonical))
+      }
+    })
+
+    it('treats array, object, and nonzero aliases as equivalent positions', () => {
+      const matrix = new Matrix(2, 0, 0, 3, 10, 20)
+      const expected = matrix.transform({ position: [5, 6] })
+
+      expect(matrix.transform({ position: { x: 5, y: 6 } })).toEqual(expected)
+      expect(matrix.transform({ px: 5, py: 6 })).toEqual(expected)
+      expect(matrix.transform({ positionX: 5, positionY: 6 })).toEqual(expected)
+    })
   })
 
   describe('decompose()', () => {
@@ -563,6 +586,15 @@ describe('Matrix.js', () => {
             skewY: 2
           })
         ).toEqual(objectContaining({ px: NaN, py: NaN }))
+      })
+
+      it('preserves zero-valued position aliases', () => {
+        expect(Matrix.formatTransforms({ px: 0, py: 0 })).toEqual(
+          objectContaining({ px: 0, py: 0 })
+        )
+        expect(Matrix.formatTransforms({ positionX: 0, positionY: 0 })).toEqual(
+          objectContaining({ px: 0, py: 0 })
+        )
       })
     })
   })

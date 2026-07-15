@@ -125,6 +125,20 @@ describe('transform.js', () => {
       expect(rect.transform('translateY')).toBe(20)
     })
 
+    it('matches Matrix transforms for zero-valued position aliases', () => {
+      const matrix = new Matrix(2, 0, 0, 3, 10, 20)
+      const expected = matrix.transform({ position: [0, 0], origin: [0, 0] })
+
+      for (const position of [
+        { px: 0, py: 0 },
+        { positionX: 0, positionY: 0 }
+      ]) {
+        const rect = new Rect().transform(matrix)
+        rect.transform({ ...position, origin: [0, 0] }, true)
+        expect(rect.matrix()).toEqual(expected)
+      }
+    })
+
     it('performs a relative transformation with flag=true', () => {
       const rect = new Rect()
         .transform({ rotate: 45, translate: [10, 20] })

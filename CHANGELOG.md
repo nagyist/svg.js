@@ -10,6 +10,7 @@ The document follows the conventions described in [“Keep a CHANGELOG”](http:
 
 ### Fixed
 
+- honor zero-valued transform positions
 - resolve references safely and match exact targets when IDs contain CSS-special characters
 - preserve multiline text metadata when writing SVG.js data to the DOM
 - align TypeScript declarations with the package's runtime exports and behavior
