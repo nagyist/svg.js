@@ -6,7 +6,7 @@ The document follows the conventions described in [“Keep a CHANGELOG”](http:
 
 ====
 
-## [Unreleased]
+## [3.2.6]
 
 ### Changed
 
@@ -1082,6 +1082,7 @@ The document follows the conventions described in [“Keep a CHANGELOG”](http:
 
 <!-- Headings above link to the releases listed here -->
 
+[3.2.6]: https://github.com/svgdotjs/svg.js/releases/tag/3.2.6
 [3.2.5]: https://github.com/svgdotjs/svg.js/releases/tag/3.2.5
 [3.2.4]: https://github.com/svgdotjs/svg.js/releases/tag/3.2.4
 [3.2.3]: https://github.com/svgdotjs/svg.js/releases/tag/3.2.3
