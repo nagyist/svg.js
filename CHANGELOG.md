@@ -12,6 +12,7 @@ The document follows the conventions described in [“Keep a CHANGELOG”](http:
 
 - animate singular affine transforms without producing non-finite matrix values
 - preserve animated transforms when seeking timelines backward or forward
+- compose parallel transform animations in runner registration order
 
 ## [3.2.7]
 

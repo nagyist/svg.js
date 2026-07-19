@@ -665,12 +665,13 @@ registerMethods({
     },
 
     _currentTransform(current) {
+      const runners = this._transformationRunners.runners
+      const currentIndex = runners.indexOf(current)
+
       return activeTransformRunners(
-        this._transformationRunners.runners
-          // we need the equal sign here to make sure, that also transformations
-          // on the same runner which execute before the current transformation are
-          // taken into account
-          .filter((runner) => runner.id <= current.id)
+        // Registration order is composition order and can differ from runner
+        // ids. Include the current runner for transforms queued earlier on it.
+        runners.slice(0, currentIndex + 1)
       )
         .map(getRunnerTransform)
         .reduce(lmultiply, new Matrix())

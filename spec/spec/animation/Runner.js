@@ -1691,6 +1691,30 @@ describe('Runner.js', () => {
           )
         })
 
+        it('composes parallel transforms in scheduling order', () => {
+          const element = new Rect()
+          const timeline = new Timeline(() => 0)
+          const rotateRunner = new Runner(100)
+            .ease('-')
+            .element(element)
+            .timeline(timeline)
+            .transform({ rotate: 90, origin: [100, 0] }, true)
+          const translateRunner = new Runner(100)
+            .ease('-')
+            .element(element)
+            .timeline(timeline)
+            .transform({ translate: [100, 0] }, true)
+
+          translateRunner.schedule(0, 'absolute')
+          rotateRunner.schedule(0, 'absolute')
+          timeline.time(100)
+          jasmine.RequestAnimationFrame.tick(1)
+
+          expect(element.matrix()).toEqual(
+            new Matrix().translate(100, 0).rotate(90, 200, 0)
+          )
+        })
+
         it('absolute transformations correctly overwrite relatives', () => {
           const element = new Rect()
           const runner1 = new Runner(100).ease('-').element(element)
