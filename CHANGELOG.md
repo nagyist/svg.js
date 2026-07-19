@@ -6,6 +6,12 @@ The document follows the conventions described in [“Keep a CHANGELOG”](http:
 
 ====
 
+## [Unreleased]
+
+### Fixed
+
+- animate singular affine transforms without producing non-finite matrix values
+
 ## [3.2.7]
 
 ### Changed

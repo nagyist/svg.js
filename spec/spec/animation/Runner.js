@@ -1534,6 +1534,57 @@ describe('Runner.js', () => {
           )
         })
 
+        it('animates a uniform zero scale with finite matrices', () => {
+          const element = new Rect()
+          const runner = new Runner(100).ease('-').element(element)
+          runner.scale(0)
+
+          runner.step(50)
+          jasmine.RequestAnimationFrame.tick(1)
+          expect(element.matrix().toArray().every(Number.isFinite)).toBe(true)
+          expect(element.matrix()).toEqual(new Matrix().scale(0.5))
+
+          runner.step(50)
+          jasmine.RequestAnimationFrame.tick(1)
+          expect(element.matrix()).toEqual(new Matrix().scale(0))
+        })
+
+        it('animates axis-specific zero scales with finite matrices', () => {
+          for (const scale of [
+            [0, 2],
+            [2, 0]
+          ]) {
+            const element = new Rect()
+            const runner = new Runner(100).ease('-').element(element)
+            runner.transform({ scale })
+
+            runner.step(50)
+            jasmine.RequestAnimationFrame.tick(1)
+            expect(element.matrix().toArray().every(Number.isFinite)).toBe(true)
+            expect(element.matrix()).toEqual(
+              new Matrix({ scale: scale.map((value) => (value + 1) / 2) })
+            )
+
+            runner.step(50)
+            jasmine.RequestAnimationFrame.tick(1)
+            expect(element.matrix()).toEqual(new Matrix({ scale }))
+          }
+        })
+
+        it('animates from a singular affine matrix', () => {
+          const element = new Rect().transform({ scale: 0 })
+          const runner = new Runner(100).ease('-').element(element)
+          runner.transform({ scale: 2 })
+
+          runner.step(50)
+          jasmine.RequestAnimationFrame.tick(1)
+          expect(element.matrix()).toEqual(new Matrix().scale(1))
+
+          runner.step(50)
+          jasmine.RequestAnimationFrame.tick(1)
+          expect(element.matrix()).toEqual(new Matrix().scale(2))
+        })
+
         it('does not treat the relative option as a translation value', () => {
           const element = new Rect()
           const runner = new Runner(100).ease('-').element(element)

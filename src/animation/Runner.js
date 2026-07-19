@@ -803,6 +803,9 @@ extend(Runner, {
     const morpher = new Morphable(this._stepper).type(
       affine ? TransformBag : Matrix
     )
+    const matrixMorpher = affine
+      ? new Morphable(this._stepper).type(Matrix)
+      : morpher
 
     let origin
     let element
@@ -843,24 +846,38 @@ extend(Runner, {
       }
       let target = new Matrix(targetTransforms)
       let start = this._isDeclarative && current ? current : startTransform
+      let activeMorpher = morpher
 
       if (affine) {
-        target = target.decompose(x, y)
-        start = start.decompose(x, y)
+        const targetParameters = target.decompose(x, y)
+        const startParameters = start.decompose(x, y)
+        const parametersAreFinite = new TransformBag(targetParameters)
+          .toArray()
+          .concat(new TransformBag(startParameters).toArray())
+          .every(Number.isFinite)
 
-        // Get the current and target angle as it was set
-        const rTarget = target.rotate
-        const rCurrent = start.rotate
+        // Singular matrices cannot always be decomposed into finite affine
+        // parameters, so interpolate their six matrix components instead.
+        if (!parametersAreFinite) {
+          activeMorpher = matrixMorpher
+        } else {
+          target = targetParameters
+          start = startParameters
 
-        // Figure out the shortest path to rotate directly
-        const possibilities = [rTarget - 360, rTarget, rTarget + 360]
-        const distances = possibilities.map((a) => Math.abs(a - rCurrent))
-        const shortest = Math.min(...distances)
-        const index = distances.indexOf(shortest)
-        target.rotate = possibilities[index]
+          // Get the current and target angle as it was set
+          const rTarget = target.rotate
+          const rCurrent = start.rotate
+
+          // Figure out the shortest path to rotate directly
+          const possibilities = [rTarget - 360, rTarget, rTarget + 360]
+          const distances = possibilities.map((a) => Math.abs(a - rCurrent))
+          const shortest = Math.min(...distances)
+          const index = distances.indexOf(shortest)
+          target.rotate = possibilities[index]
+        }
       }
 
-      if (relative) {
+      if (relative && activeMorpher === morpher) {
         // we have to be careful here not to overwrite the rotation
         // with the rotate method of Matrix
         if (!isMatrix) {
@@ -871,16 +888,16 @@ extend(Runner, {
         }
       }
 
-      morpher.from(start)
-      morpher.to(target)
+      activeMorpher.from(start)
+      activeMorpher.to(target)
 
-      const affineParameters = morpher.at(pos)
+      const affineParameters = activeMorpher.at(pos)
       currentAngle = affineParameters.rotate
       current = new Matrix(affineParameters)
 
       this.addTransform(current)
       element._addRunner(this)
-      return morpher.done()
+      return activeMorpher.done()
     }
 
     function retarget(newTransforms) {
